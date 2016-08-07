@@ -1,0 +1,3 @@
+Writer.IsolatedNode = class IsolatedNode {
+
+};
