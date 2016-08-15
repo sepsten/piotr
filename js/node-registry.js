@@ -33,3 +33,10 @@ Writer.NodeRegistry = class NodeRegistry extends Writer.Registry {
     return obj.id;
   }
 };
+
+/**
+ * The library's global node registry.
+ *
+ * @type {Writer.NodeRegistry}
+ */
+Writer.nodeReg = new Writer.NodeRegistry;
