@@ -23,13 +23,6 @@ Writer.Editor = class Editor {
     this.history = new Writer.History;
 
     /**
-     * Allows to accumulate commands before commiting them to the history.
-     *
-     * @type {Writer.Accumulator}
-     */
-    this.accumulator = new Writer.Accumulator(this.history);
-
-    /**
      * Surface registry, which manages all surfaces.
      *
      * @type {Writer.SurfaceRegistry}
