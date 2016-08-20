@@ -96,9 +96,6 @@ Writer.Surface = class Surface {
     // Set the ID as a data attribute
     this.dom.dataset[Writer.prefix + "SurfaceId"] = this.id;
 
-    // Listen to DOM events
-    this.bind();
-
     // Add all the document's node to the DOM
     for(var i = 0; i < nodes.length; i++) {
       nodes[i].attach(this);
@@ -106,67 +103,6 @@ Writer.Surface = class Surface {
     }
 
     this.updatePositions();
-  }
-
-  /**
-   * Prevents content-editable's default behavior if it overlaps with Surface's
-   * formalized behavior (which covers the following operations: InsertNode and
-   * RemoveNode).
-   * As the `input` event targets the editing host (content-editable) and not
-   * the actual node that was changed, its handling is delegated to child nodes
-   * which will check if their DOM representation has changed and update the
-   * model accordingly.
-   * Also, for the UpdateNode operation, content-editable's default behavior is
-   * kept (I need to document the exact commands that are allowed).
-   *
-   * @private
-   */
-  bind() {
-    var self = this;
-
-    this.dom.addEventListener("keydown", function(e) {
-      if(self.handleCriticalInputs) {
-        var name = e.code;
-        if(!self.selection.caret) name = "Selection+" + name;
-        self.handle(name, e);
-      }
-    });
-
-    this.dom.addEventListener("keypress", function(e) {
-      if(!self.handleCriticalInputs)
-        return;
-
-      if(!self.selection.caret)
-        // Handle type-over
-        self.handle("Selection+Input", e);
-    });
-
-    this.dom.addEventListener("paste", function(e) {
-      if(!self.handleCriticalInputs)
-        return;
-
-      // Selection?
-      // No selection
-        //
-    });
-
-    this.dom.addEventListener("input", function(e) {
-      // Allow the default contentEditable behavior but
-      // create dummy operation object that reflects the changes (and thus
-      // allows undoing).
-      // Only single-node changes on text nodes should end up here.
-
-      // Also, as long as subsquent changes are on the same node,
-      // they may be accumulated.
-      if(self.selection.inSameNode) {
-        let node = self.selection.startNode;
-        if(node instanceof Writer.TextNode)
-          node.updateModelFromDOM();
-        else
-          throw new Error("Unhandeld input event on non-text node!");
-      } else
-        throw new Error("Unhandeld input event on multiple nodes!");
-    });
   }
 
   /**
@@ -190,15 +126,27 @@ Writer.Surface = class Surface {
    * @returns {Boolean} True if a handler was found.
    */
   handle(name, event) {
-    var cmd;
+    var cmd; // Will store the returned command.
 
+    // Separate the handling of events according to the state of selection.
+    if(!this.selection.caret)
+      name = "Selection+" + name;
+
+    // If the selection is restrained to a single node, directly use the node's
+    // handler.
     if(this.selection.inSameNode &&
        this.selection.startNode.behavior.hasOwnProperty(name)) {
       cmd = this.selection.startNode.behavior[name].call(this, event);
-    } else if(this.behavior.hasOwnProperty(name)) {
+    }
+
+    // Else, use the surface's handler.
+    else if(this.behavior.hasOwnProperty(name)) {
       cmd = this.behavior[name].call(this, event);
-    } else
+    }
+
+    else {
       return false;
+    }
 
     // Add to history so that the operation is cancelable
     if(cmd)
@@ -209,7 +157,6 @@ Writer.Surface = class Surface {
   /**
    * Inserts a node in the surface. Should not be called directly but only
    * through the `InsertNode` command.
-   * This method doesn't trigger any node rendering.
    *
    * @private
    * @param {Writer.Node} node - The node to insert.

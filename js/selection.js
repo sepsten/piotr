@@ -1,8 +1,8 @@
 /**
- * Listens for selection-related events for the entire editor (it is not
- * associated to a particular Surface) and dispatches their handling to the
- * concerned SurfaceSelection instances.
- * For now, it doesn't support discrete selections (which have multiple ranges).
+ * Locates the surface that should handle selection. It allows to update the
+ * state of selection in the model editor-wise.
+ * It is updated by the editor instance before every change; it also updates
+ * itself on some non-critical events.
  *
  * @class
  * @param {Writer.Editor} editor - The parent editor
@@ -56,6 +56,9 @@ Writer.Selection = class Selection {
    * Eventually, the `selectstart` and `selectionchange` events of the Selection
    * API should be used, but they are not implemented everywhere yet.
    * Called by the constructor.
+   * These listeners are only needed for handling the allowed default content-
+   * editable behaviors and they could add more UI reactivity if selection must
+   * be displayed in some non-default way.
    *
    * @private
    */

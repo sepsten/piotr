@@ -198,8 +198,6 @@ Writer.SurfaceSelection = class SurfaceSelection {
     Object.assign(this.previousState, this.state); // Save the previous state
     this.update(); // Update the current state
     this.notify();
-
-    //console.log(this.state, this.docsel);
   }
 
   /**
