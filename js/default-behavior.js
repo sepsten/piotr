@@ -24,18 +24,10 @@ Writer.DefaultBehavior = {
   },
 
   "Selection+Input": function(e) {
-    if(!this.selection.inSameNode) {
-      var cmd = Writer.Transforms.removeRange(this, this.selection.state);
-      this.selection.set(this.selection.state.startNode,
-        this.selection.startOffset);
-      return cmd;
-    }
-  },
-
-  "Shift+Enter": function(e) {
-    // Not handled for now
-    // insert <br>
-    // Can leave default, will trigger an input event.
+    var cmd = Writer.Transforms.removeRange(this, this.selection.state);
+    this.selection.set(this.selection.state.startNode,
+      this.selection.startOffset);
+    return cmd;
   },
 
   "Delete": function(e) {
