@@ -13,14 +13,6 @@ Writer.TextNode = class TextNode extends Writer.Node {
   constructor() {
     super();
 
-    /**
-     * Indicates if the node is currently selected.
-     *
-     * @type {Boolean}
-     */
-    this.selected = false;
-
-
     // !: All handlers are called with the surface as context.
     // Enter handler
     this.behavior["Enter"] = function(e) {
@@ -109,16 +101,6 @@ Writer.TextNode = class TextNode extends Writer.Node {
     // text node rather than the whole editing host).
     dom.style.whiteSpace = "pre-wrap";
     return dom;
-  }
-
-  // From Node
-  selectionStart() {
-    this.selected = true;
-  }
-
-  // From Node
-  selectionEnd() {
-    this.selected = false;
   }
 
   // From Node
@@ -276,8 +258,6 @@ Writer.TextNode = class TextNode extends Writer.Node {
   updateModelFromDOM() {
     var rerender = false,
         text = "";
-
-    console.log("updating", this);
 
     // First possibility: empty node with just a <br>.
     if(this.dom.childNodes.length === 0 ||
