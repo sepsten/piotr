@@ -48,6 +48,13 @@ Writer.Selection = class Selection {
      */
     this.previousState = {};
 
+    /**
+     * An array of functions called on selection updates.
+     *
+     * @type {Function[]}
+     */
+    this.subscribers = [];
+
     this.bind(); // Listen to selection events
   }
 
@@ -82,6 +89,27 @@ Writer.Selection = class Selection {
   }
 
   /**
+   * Adds a subscribe callback that will be called each time the selection is
+   * updated.
+   *
+   * @param {Function} fn - The callback
+   */
+  subscribe(fn) {
+    this.subscribers.push(fn);
+  }
+
+  /**
+   * Removes a subscriber function.
+   *
+   * @param {Function} fn - The callback to remove
+   */
+  unsubscribe(fn) {
+    var index = this.subscribers.indexOf(fn);
+    if(index >= 0)
+      this.subscribers.splice(index, 1);
+  }
+
+  /**
    * Updates the state of the selection inside the surface.
    * Called by the event listeners set up by `bind()`.
    *
@@ -108,6 +136,11 @@ Writer.Selection = class Selection {
       this.previousState.surface.selection.end();
 
     this.state.surface.selection.handle(this.docsel);
+
+    // Call subscribers.
+    for(var i = 0; i < this.subscribers.length; i++) {
+      this.subscribers[i](this);
+    }
   }
 
   /**
