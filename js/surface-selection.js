@@ -32,21 +32,12 @@ Writer.SurfaceSelection = class SurfaceSelection {
     this.docsel = document.getSelection();
 
     /**
-     * True if the instance is currently handling the selection.
-     * This property is stateful but is not a part of the selection's state as
-     * the selection's state can only change when it is true.
-     * Hence, when it is false, the selection's state is not updated.
-     *
-     * @type {Boolean}
-     */
-    this.inside = false;
-
-    /**
      * Represents the selection's current state inside the surface.
-     * Be aware that the state isn't updated when
-     * `SurfaceSelection#surface#handleCriticalInputs` is set to false.
+     * If `inside` is set to false, all other state parameters are to be
+     * disregarded as not up to date or invalid.
      *
      * @type {Object}
+     * @property {Boolean} inside - True if selection inside the surface.
      * @property {Boolean} caret - True if the selection is a caret.
      * @property {Number} startNode - The start node of the selection in
      * document's order.
@@ -56,6 +47,7 @@ Writer.SurfaceSelection = class SurfaceSelection {
      * @property {Number} endOffset - The model offset of the end point.
      */
     this.state = {
+      inside: false,
       caret: false,
       startNode: -1,
       startOffset: -1,
@@ -192,9 +184,6 @@ Writer.SurfaceSelection = class SurfaceSelection {
     if(!this.enabled)
       return;
 
-    this.inside = true;
-    this.surface.handleCriticalInputs = true;
-
     Object.assign(this.previousState, this.state); // Save the previous state
     this.update(); // Update the current state
     this.notify();
@@ -207,14 +196,11 @@ Writer.SurfaceSelection = class SurfaceSelection {
    * Only called by the editor's `Selection` instance.
    */
   end() {
-    this.inside = false;
-    this.surface.handleCriticalInputs = false;
+    Object.assign(this.previousState, this.state); // Save the previous state
+    this.state.inside = false;
 
     // Notify the nodes
-    for(var i = 0; i < this.surface.nodes.length; i++) {
-      if(this.isInSelection(i))
-        this.surface.nodes[i].selectionEnd();
-    }
+    this.notify();
   }
 
   /**
@@ -223,6 +209,9 @@ Writer.SurfaceSelection = class SurfaceSelection {
    * @private
    */
   update() {
+    // When this is called, the selection is always inside the surface.
+    this.state.inside = true;
+
     var range = this.docsel.getRangeAt(0);
 
     // 1. Duplicate the `docsel.isCollapsed`.
@@ -280,6 +269,7 @@ Writer.SurfaceSelection = class SurfaceSelection {
    */
   notify() {
     for(var i = 0; i < this.surface.nodes.length; i++) {
+      console.log(i, this.isInSelection(i), this.wasInSelection(i))
       // The node is not in the selection anymore
       if(!this.isInSelection(i) && this.wasInSelection(i))
         this.surface.nodes[i].selectionEnd();
@@ -298,6 +288,9 @@ Writer.SurfaceSelection = class SurfaceSelection {
    * @returns {Boolean}
    */
   isInSelection(id) {
+    if(!this.state.inside)
+      return false;
+
     if(this.state.caret)
       return id === this.state.startNode;
     else
@@ -312,6 +305,9 @@ Writer.SurfaceSelection = class SurfaceSelection {
    * @returns {Boolean}
    */
   wasInSelection(id) {
+    if(!this.previousState.inside)
+      return false;
+
     if(this.previousState.caret)
       return id === this.previousState.startNode;
     else
