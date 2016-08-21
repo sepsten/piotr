@@ -3,34 +3,42 @@
  *
  * @class
  */
-Writer.NodeRegistry = class NodeRegistry extends Writer.Registry {
+Writer.NodeRegistry = class NodeRegistry {
   constructor() {
-    super();
-  }
-
-  /**
-   * Cannot create new node classes. Don't use this method.
-   */
-  new() {
-    throw new Error("The node registry cannot create new node classes!");
+    /**
+     * Internal map used to store everything.
+     *
+     * @type {Map}
+     */
+    this.map = new Map;
   }
 
   /**
    * Adds a node class to the registry.
    *
-   * @name Writer.NodeRegistry#add
    * @param {Function} nodeClass - The node class to add.
    */
+  add(nodeClass) {
+    if(!this.map.has(nodeClass.id))
+      this.map.set(nodeClass.id, nodeClass);
+    else
+      throw new Error("Node class with id `" + nodeClass.id + "` cannot be "
+      + "defined twice.");
+  }
 
   /**
-   * Returns the classe's ID.
+   * Returns the class associated to the given ID.
    *
-   * @private
-   * @param {Function} obj - The class to add.
-   * @returns {String}
+   * @param {String} id - The node class ID
+   * @returns {Function} The node class.
    */
-  generateID(obj) {
-    return obj.id;
+  get(id) {
+    var r = this.map.get(id);
+    if(r)
+      return r;
+    else
+      throw new Error("Node class with id `" + nodeClass.id + "` does not "
+      + "exist.");
   }
 };
 
