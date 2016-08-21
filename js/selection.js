@@ -116,8 +116,8 @@ Writer.Selection = class Selection {
    * @private
    */
   checkScope() {
-    if(this.editor.surfaceReg.mother.contains(this.docsel.anchorNode) &&
-       this.editor.surfaceReg.mother.contains(this.docsel.focusNode))
+    if(this.editor.mother.contains(this.docsel.anchorNode) &&
+       this.editor.mother.contains(this.docsel.focusNode))
       this.state.inside = true;
     else
       this.state.inside = false;
@@ -159,8 +159,8 @@ Writer.Selection = class Selection {
     // If they're not the same, use the lowest common parent, aka. the mother
     // surface.
     if(asid !== fsid)
-      this.state.surface = this.editor.surfaceReg.mother;
+      this.state.surface = this.editor.mother;
     else
-      this.state.surface = this.editor.surfaceReg.get(asid);
+      this.state.surface = Writer.surfaceReg.get(asid);
   }
 };

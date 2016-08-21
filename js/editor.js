@@ -23,11 +23,14 @@ Writer.Editor = class Editor {
     this.history = new Writer.History;
 
     /**
-     * Surface registry, which manages all surfaces.
+     * The editor's main or "mother" surface.
      *
-     * @type {Writer.SurfaceRegistry}
+     * @type {Writer.Surface}
      */
-    this.surfaceReg = new Writer.SurfaceRegistry(doc.nodes, dom, this);
+    this.mother = new Writer.Surface(doc.nodes);
+    this.mother.setEditor(this);
+    this.mother.setDOMRoot(dom);
+    this.mother.attachNodes();
 
     /**
      * The global selection handler.
@@ -67,7 +70,7 @@ Writer.Editor = class Editor {
    */
   bind() {
     var self = this,
-        dom = this.surfaceReg.mother.dom;
+        dom = this.mother.dom;
 
     dom.addEventListener("keydown", function(e) {
       var name = e.code;

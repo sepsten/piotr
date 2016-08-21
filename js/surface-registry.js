@@ -1,16 +1,18 @@
 /**
- * Stores all the surfaces used by the editor.
- * The constructor instantiates a mother surface (which always has ID 0).
+ * Stores a reference to all the surfaces created in the page (even if their
+ * DOM is not live on the page).
+ * New surfaces automatically add themselves to this registry.
  *
  * @class
- * @extends Writer.Registry
- * @param {Writer.Node[]} nodes - A node list for the mother surface.
- * @param {Element} dom - A DOM node for the mother surface.
- * @param {Writer.History} history - The history that will be used for edits.
  */
-Writer.SurfaceRegistry = class SurfaceRegistry extends Writer.Registry {
-  constructor(nodes, dom, history) {
-    super();
+Writer.SurfaceRegistry = class SurfaceRegistry {
+  constructor() {
+    /**
+     * Internal map used for storage.
+     *
+     * @type {Map}
+     */
+    this.map = new Map;
 
     /**
      * Counts the number of surfaces added to the registry.
@@ -20,44 +22,49 @@ Writer.SurfaceRegistry = class SurfaceRegistry extends Writer.Registry {
      * @type {Number}
      */
     this.idCount = -1;
-
-    /**
-     * Points to the mother surface. Short-cut for `SurfaceRegistry#get(0)`.
-     *
-     * @type {Surface}
-     */
-    this.mother = null;
-
-    // Mother surface creation
-    this.mother = this.new(nodes, dom, history);
   }
 
   /**
-   * @name Writer.SurfaceRegistry#new
-   * @method
-   * @param {Node[]} nodes - The node list to edit.
-   * @param {HTMLElement} dom - The DOM node which will contain the editor's
-   * editing surface.
-   * @param {Writer.History} history - The history that will be used for edits.
-   * @returns {Writer.Surface} The created surface.
-   */
-
-  /**
-   * Internal function that generates a new unique ID.
+   * Adds a surface to the registry and gives it a unique ID (unique on the
+   * page).
    *
-   * @returns {Number} The generated ID.
+   * @param {Writer.Surface} surface - The surface to add
    */
-  generateID() {
+  add(surface) {
     this.idCount++;
-    return this.idCount;
+    surface.setID(this.idCount);
+    this.map.set(this.idCount, surface);
   }
 
   /**
-   * Instantiates a new surface and returns it.
+   * Removes a surface from the registry.
    *
-   * @returns {Writer.Surface} The generated object.
+   * @param {Number} id - The surface's ID
+   * @throws When the surface was not found.
    */
-  generateObject() {
-    return new Writer.Surface(...arguments, this.mother);
+  remove(id) {
+    if(!this.map.delete(id))
+      throw new Error("Surface with ID "+id+" is not in the registry!");
+  }
+
+  /**
+   * Retrieves a surface from the registry.
+   *
+   * @param {Number} id - The surface's ID
+   * @throws When the surface was not found.
+   * @returns {Writer.Surface} The surface instance.
+   */
+  get(id) {
+    var s = this.map.get(id);
+    if(!s)
+      throw new Error("Surface with ID "+id+" is not in the registry!");
+    return s;
   }
 };
+
+/**
+ * Global surface registry.
+ *
+ * @type {Writer.SurfaceRegistry}
+ */
+Writer.surfaceReg = new Writer.SurfaceRegistry;
