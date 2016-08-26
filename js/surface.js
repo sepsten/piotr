@@ -196,22 +196,37 @@ Writer.Surface = class Surface {
     // handler.
     if(this.selection.inSameNode &&
        this.selection.startNode.behavior.hasOwnProperty(name)) {
-      cmd = this.selection.startNode.behavior[name].call(this, event);
+      this.execute(this.selection.startNode.behavior[name], event);
     }
 
     // Else, use the surface's handler.
     else if(this.behavior.hasOwnProperty(name)) {
-      cmd = this.behavior[name].call(this, event);
+      this.execute(this.behavior[name], event);
     }
 
-    else {
+    else
       return false;
-    }
 
-    // Add to history so that the operation is cancelable
-    if(cmd)
-      this.history.push(cmd);
     return true;
+  }
+
+  /**
+   * Executes a given transformation function with the surface as context.
+   * The function should return an operation object.
+   * Updates the selection if an operation was executed.
+   *
+   * @param {Function} fn - The function to execute
+   * @param {*} [...args] - Additionnal arguments to pass to the function
+   * @returns {Boolean} True if the transform returned an operation.
+   */
+  execute(fn, ...args) {
+    var cmd = fn.apply(this, args);
+    if(cmd) {
+      this.history.push(cmd); // Save the operation to make it undoable
+      this.editor.selection.update(); // Update global selection
+      return true;
+    } else
+      return false
   }
 
   /**

@@ -44,22 +44,14 @@ Writer.Editor = class Editor {
   }
 
   /**
-   * Handles an event.
-   * It ensures that the selection is up to date before applying any change to
-   * the model.
+   * Handles an event by calling the surface's behavior function.
    */
   handle() {
-    // Update global selection state to find delegatee surface
-    // The surface's selection state is also updated.
-    this.selection.update();
-
-    // Call surface's behavior
-    if(this.selection.state.inside) {
+    if(this.selection.state.inside)
       this.selection.state.surface.handle.apply(
         this.selection.state.surface,
         arguments
       );
-    }
   }
 
   /**
@@ -99,8 +91,10 @@ Writer.Editor = class Editor {
       var selection = self.selection.state.surface.selection;
       if(selection.inSameNode) {
         let node = selection.startNode;
-        if(node instanceof Writer.TextNode)
+        if(node instanceof Writer.TextNode) {
           node.updateModelFromDOM();
+          self.selection.update(); // Update selection after default behavior.
+        }
         else
           throw new Error("Unhandeld input event on non-text node!");
       } else

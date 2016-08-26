@@ -269,7 +269,6 @@ Writer.SurfaceSelection = class SurfaceSelection {
    */
   notify() {
     for(var i = 0; i < this.surface.nodes.length; i++) {
-      console.log(i, this.isInSelection(i), this.wasInSelection(i))
       // The node is not in the selection anymore
       if(!this.isInSelection(i) && this.wasInSelection(i))
         this.surface.nodes[i].selectionEnd();
@@ -372,7 +371,5 @@ Writer.SurfaceSelection = class SurfaceSelection {
       r.collapse(true); // Collapse on start point
     this.docsel.removeAllRanges();
     this.docsel.addRange(r);
-
-    this.handle();
   }
 };
