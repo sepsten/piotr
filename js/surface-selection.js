@@ -355,7 +355,7 @@ Writer.SurfaceSelection = class SurfaceSelection {
         startNode = this.surface.nodes[startNodeID],
         sbp = startNode.offsetToBoundaryPoint(startOffset);
 
-    if(endNodeID && endOffset) {
+    if(typeof endNodeID !== "undefined" && typeof endOffset !== "undefined") {
       var endNode = this.surface.nodes[endNodeID],
           ebp = endNode.offsetToBoundaryPoint(endOffset);
     }
@@ -365,7 +365,7 @@ Writer.SurfaceSelection = class SurfaceSelection {
     // after using `document.execCommand` (at least sometimes).
     // In Firefox, the same setup worked fine.
     r.setStart(sbp[0], sbp[1]);
-    if(endNodeID && endOffset)
+    if(endNode)
       r.setEnd(ebp[0], ebp[1]);
     else
       r.collapse(true); // Collapse on start point
