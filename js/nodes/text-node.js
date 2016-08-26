@@ -298,6 +298,15 @@ Writer.TextNode = class TextNode extends Writer.Node {
     if(rerender)
       this.surface.selection.restore();
   }
+
+  /**
+   * Clones the nodes and its parameters but NOT its state.
+   *
+   * @returns {TextNode}
+   */
+  clone() {
+    return new this.constructor;
+  }
 };
 
 // Inherited from Writer.Node

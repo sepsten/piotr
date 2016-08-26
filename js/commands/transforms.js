@@ -1,5 +1,21 @@
 Writer.Transforms = {
   /**
+   * Changes the type of a text node.
+   *
+   * @param {Writer.Surface} surface - The surface containing the node
+   * @param {Number} pos - The node's position in the surface
+   * @param {Writer.TextNode} newNode - A new virgin text node
+   */
+  changeTextNodeType(surface, pos, newNode) {
+    Object.assign(newNode.state, surface.nodes[pos].state);
+
+    return Writer.CF.compose(
+      Writer.CF.removeNode(surface, pos),
+      Writer.CF.insertNode(surface, newNode, pos)
+    );
+  },
+
+  /**
    * Splits a text node in two.
    *
    * @param {Writer.Surface} surface - The surface to which the node belongs.
@@ -9,7 +25,7 @@ Writer.Transforms = {
    */
   splitTextNode(surface, nodeid, offset) {
     var node = surface.nodes[nodeid],
-        newnode = new node.constructor,
+        newnode = node.clone(),
         text1 = node.state.text.substring(0, offset),
         text2 = node.state.text.substring(offset);
 

@@ -17,8 +17,14 @@ Writer.HeadingNode = class HeadingNode extends Writer.TextNode {
     this.level = level;
   }
 
+  // From TextNode
   getTagName() {
     return "h"+this.level;
+  }
+
+  // From TextNode
+  clone() {
+    return new Writer.HeadingNode(this.level);
   }
 };
 
