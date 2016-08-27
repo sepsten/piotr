@@ -214,6 +214,26 @@ Writer.SurfaceSelection = class SurfaceSelection {
 
     var range = this.docsel.getRangeAt(0);
 
+    // 0. Check if the selection is inside a node and not in-between
+    var startDirty = (range.startContainer === this.surface.dom),
+        endDirty = (range.endContainer === this.surface.dom);
+    if(startDirty || endDirty) {
+      // Dirty solution: we reset the selection
+      console.log("Dirty selection!");
+
+      // We try to find the nearest node
+      let nodePos;
+      if(endDirty)
+        nodePos = range.endOffset === 0 ? 0 : range.endOffset - 1;
+
+      else if(startDirty)
+        nodePos = range.endOffset === 0 ? 0 : range.endOffset - 1;
+
+      this.set(nodePos, 0);
+      this.surface.editor.selection.update();
+      return;
+    }
+
     // 1. Duplicate the `docsel.isCollapsed`.
     this.state.caret = this.docsel.isCollapsed;
 
@@ -274,7 +294,7 @@ Writer.SurfaceSelection = class SurfaceSelection {
         this.surface.nodes[i].selectionEnd();
 
       // The node entered the selection
-      if(this.isInSelection(i) && !this.wasInSelection(i))
+      if(this.isInSelection(i)) // && !this.wasInSelection(i))
         this.surface.nodes[i].selectionStart();
     }
   }
@@ -350,6 +370,9 @@ Writer.SurfaceSelection = class SurfaceSelection {
   set(startNodeID, startOffset, endNodeID, endOffset) {
     if(!this.enabled)
       return;
+
+    // Add focus to the content-editable
+    this.surface.dom.focus();
 
     var r = document.createRange(),
         startNode = this.surface.nodes[startNodeID],
