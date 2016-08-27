@@ -218,34 +218,25 @@ Writer.Node = class Node {
   /**
    * Exports the node as a JSON object.
    *
-   * @abstract
    * @returns {Object}
    */
   toJSON() {
-    throw new Error("Abstract method!");
+    return {
+      type: this.constructor.id,
+      state: this.copyState()
+    };
   }
 
   /**
    * Instantiates a node from its JSON representation.
    *
-   * @abstract
    * @param {Object} json - The JSON representation
-   * @returns {Node}
+   * @returns {Writer.Node}
    */
   static fromJSON(json) {
-    throw new Error("Abstract method!");
-  }
-
-  /**
-   * Instantiates a node in place of another. The new node should inherit from
-   * as much compatible data as possible from the previous node.
-   *
-   * @abstract
-   * @param {Node} previousNode - The previous node which will be replaced.
-   * @returns {Node}
-   */
-  static fromNode(previousNode) {
-    throw new Error("Abstract method!");
+    var newNode = new this;
+    newNode.updateState(json.state);
+    return newNode;
   }
 };
 
