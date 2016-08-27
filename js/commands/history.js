@@ -35,8 +35,10 @@ Writer.History = class History {
    * Stacks an already-executed command in the history.
    *
    * @param {Writer.Command} cmd - The command to store
+   * @param {Object} sel - The state of selection before command execution
    */
-  push(cmd) {
+  push(cmd, sel) {
+    cmd.selection = sel;
     this.cursor++;                      // Move to the next index
     this.stack[this.cursor] = cmd;      // Add the new command
     this.stack.splice(this.cursor + 1); // Erase all subsequent commands
@@ -49,7 +51,7 @@ Writer.History = class History {
   undo() {
     if(this.canUndo()) {
       this.stack[this.cursor].cancel();
-      this.editor.selection.set(this.stack[this.cursor].selection);
+      this.editor.selection.set(this.stack[this.cursor].selBefore);
       this.cursor--;
     }
   }
@@ -61,6 +63,7 @@ Writer.History = class History {
     if(this.canRedo()) {
       this.cursor++;
       this.stack[this.cursor].execute();
+      this.editor.selection.set(this.stack[this.cursor].selAfter);
     }
   }
 

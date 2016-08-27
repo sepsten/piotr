@@ -254,8 +254,9 @@ Writer.TextNode = class TextNode extends Writer.Node {
    * operation passed to the operation pipeline.
    *
    * @todo Optimize conditions.
+   * @returns {Writer.Command} An update command
    */
-  updateModelFromDOM() {
+  modelUpdateFromDOM() {
     var rerender = false,
         text = "";
 
@@ -291,12 +292,12 @@ Writer.TextNode = class TextNode extends Writer.Node {
     if(rerender)
       this.surface.selection.save();
 
-    this.surface.history.push(
-      Writer.CF.updateNode(this, {text}, rerender)
-    );
+    var cmd = Writer.CF.updateNode(this, {text}, rerender)
 
     if(rerender)
       this.surface.selection.restore();
+
+    return cmd;
   }
 
   /**

@@ -8,7 +8,11 @@
  * @property {String} type - The command type
  * @property {Function} execute - Executes the command
  * @property {Function} cancel - Restores the state prior to the execution
+ * @property {Object} [selBefore] - State of selection before command execution
+ * @property {Object} [selAfter] - State of selection after command execution
  */
+
+var DEBUG = true;
 
 /**
  * `UpdateNode`, `InsertNode` and `RemoveNode` are the the only three commands
@@ -66,19 +70,25 @@ Writer.CommandFactory = Writer.CF = {
    * @returns {Writer.Command}
    */
   updateNode(node, update, rerender=true) {
+    // Save a copy of the old state
+    var oldState = node.copyState();
+
     var cmd = {
       type: "UpdateNode",
+      hasExecuted: false,
       execute() {
-        // Save a copy of the old state
-        this.oldState = Object.assign({}, node.state);
+        if(DEBUG) console.log("UpdateNode", node, update, rerender);
 
-        // Update the state and
-        Object.assign(node.state, update);
-        if(rerender) node.render();
+        // Update the state
+        node.updateState(update);
+
+        // Always re-render when re-executing
+        if(rerender || this.hasExecuted) node.render();
+        this.hasExecuted = true;
       },
 
       cancel() {
-        node.state = this.oldState;
+        node.updateState(oldState);
         node.render();
       }
     };
@@ -100,6 +110,7 @@ Writer.CommandFactory = Writer.CF = {
     var cmd = {
       type: "InsertNode",
       execute() {
+        if(DEBUG) console.log("InsertNode", surface, node, pos);
         surface.insertNode(node, pos);
       },
 
@@ -126,6 +137,7 @@ Writer.CommandFactory = Writer.CF = {
     var cmd = {
       type: "RemoveNode",
       execute() {
+        if(DEBUG) console.log("RemoveNode", surface, id);
         surface.removeNode(id);
       },
 

@@ -221,18 +221,24 @@ Writer.Surface = class Surface {
    */
   execute(fn, ...args) {
     // Save the selection before execution
-    var selection = Object.assign({}, this.editor.selection.state);
+    var selBefore = this.editor.selection.copyState();
 
     // Execute...
     var cmd = fn.apply(this, args);
-    cmd.selection = selection;
 
-    if(cmd) {
-      this.history.push(cmd); // Save the operation to make it undoable
-      this.editor.selection.update(); // Update global selection
-      return true;
-    } else
-      return false
+    // If the function didn't return any command, abort.
+    if(!cmd)
+      return false;
+
+    // Save selection after execution.
+    this.editor.selection.update(); // Update global selection
+    var selAfter = this.editor.selection.copyState();
+
+    cmd.selBefore = selBefore;
+    cmd.selAfter = selAfter;
+
+    this.history.push(cmd); // Save the operation to make it undoable
+    return true;
   }
 
   /**

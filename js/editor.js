@@ -88,13 +88,11 @@ Writer.Editor = class Editor {
       // accumulated.)
 
       // N.B.: We rely on the previous state of selection.
-      var selection = self.selection.state.surface.selection;
-      if(selection.inSameNode) {
-        let node = selection.startNode;
-        if(node instanceof Writer.TextNode) {
-          node.updateModelFromDOM();
-          self.selection.update(); // Update selection after default behavior.
-        }
+      var surface = self.selection.state.surface;
+      if(surface.selection.inSameNode) {
+        let node = surface.selection.startNode;
+        if(node instanceof Writer.TextNode)
+          surface.execute(function() {return node.modelUpdateFromDOM();});
         else
           throw new Error("Unhandeld input event on non-text node!");
       } else

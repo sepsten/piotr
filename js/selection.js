@@ -201,6 +201,15 @@ Writer.Selection = class Selection {
   }
 
   /**
+   * Returns a copy of the state of selection.
+   *
+   * @returns {Object}
+   */
+  copyState() {
+    return Object.assign({}, this.state);
+  }
+
+  /**
    * Sets the state of selection globally.
    *
    * @type {Object} newState - A state of selection

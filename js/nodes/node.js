@@ -39,6 +39,13 @@ Writer.Node = class Node {
     this.state = this.getInitialState();
 
     /**
+     * The node's previous state (in real time, not on the history's timeline).
+     *
+     * @type {Object}
+     */
+    this.previousState = null;
+
+    /**
      * Custom critical input handling for a given node.
      * Its functions are always called with the parent surface as context.
      *
@@ -184,6 +191,29 @@ Writer.Node = class Node {
    * @abstract
    */
   selectionEnd() {}
+
+  /**
+   * Returns a copy of the current state, which can be fed back to
+   * `Node#updateState()`.
+   * The default implementation does not perform a deep copy.
+   *
+   * @returns {Object} A copy of the current state.
+   */
+  copyState() {
+    return Object.assign({}, this.state);
+  }
+
+  /**
+   * Performs an update on the current state using the `update` object.
+   * The default implementation just copies the properties of the update object
+   * onto the current state after having saved the previous state.
+   *
+   * @param {Object} update - The update object
+   */
+  updateState(update) {
+    this.previousState = this.copyState();
+    Object.assign(this.state, update);
+  }
 
   /**
    * Exports the node as a JSON object.
