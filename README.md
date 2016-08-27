@@ -1,6 +1,23 @@
-# Terminology
+# Writer
 
-Component: A component is a certain type of node. It represents the feature but not its instances, which are the nodes themselves.
+## To-do
+
+Model features:
+- [x] Implement isolated nodes.
+- [x] A more convenient node registry.
+- [ ] JSON serialization.
+- [ ] Clearly separate and/or re-organize event handlers, model transforms and
+  base commands.
+- [ ] Full UTF-8 support.
+- [ ] Editor destruction.
+
+UI features:
+- [ ] Support copy/paste.
+- [ ] Maybe support additional keys like delete, tab, shift+enter, etc.
+- [ ] Implement a toolbar.
+- [ ] Implement annotations and styles ! Bold, italics, etc.
+
+## Terminology
 
 Critical inputs: Inputs from the user that are handled by default by contentEditable in a way that will certainly break the mapping rules between document model and DOM. For example: enter, backspace, delete, paste…
 
@@ -16,7 +33,7 @@ Surface hierarchy: See dedicated section.
 
 Surface node: A DOM node that is a direct child of the Surface DOM element.
 
-# Surface hierarchy
+## Surface hierarchy
 
 The editor consists of one main surface; but inside this surface, some nodes can integrate surfaces themselves. We call these *child surfaces* and the main surface can also be called the *mother surface*.
 
