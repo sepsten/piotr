@@ -2,20 +2,28 @@
 
 ## To-do
 
+General:
+- [ ] Use CommonJS idioms to be compatible with Browserify
+- [ ] NPM packaging and versioning
+- [ ] Build routines
+- [ ] Tests ???
+
 Model features:
 - [x] Implement isolated nodes.
 - [x] A more convenient node registry.
 - [ ] JSON serialization.
+- [ ] Move all model updates to editor-level instead of surface-level
 - [ ] Clearly separate and/or re-organize event handlers, model transforms and
   base commands.
 - [ ] Full UTF-8 support.
 - [ ] Editor destruction.
 
 UI features:
-- [ ] Support copy/paste.
-- [ ] Maybe support additional keys like delete, tab, shift+enter, etc.
 - [x] Implement a toolbar.
+- [ ] Keyboard shortcuts (associated to toolbar buttons)
+- [ ] Support copy/paste.
 - [ ] Implement annotations and styles ! Bold, italics, etc.
+- [ ] Maybe support additional keys like delete, tab, shift+enter, etc.
 
 ## Terminology
 
@@ -27,7 +35,7 @@ Node: Might be DOM node or model node.
 
 Selection: A continuous portion of the document selected by the user. It is delimited by two points, the anchor and the focus, which are successive in time but not in reading direction. Technically, there is always a selection as the caret is represented by a selection with identical anchor and focus.
 
-Surface: An object associated to a unique DOM element whose `contendeditable` property is set to true. All model nodes are represented by DOM nodes inside the surface.
+Surface: An object associated to a unique DOM element whose `contenteditable` property is set to true. All model nodes are represented by DOM nodes inside the surface.
 
 Surface hierarchy: See dedicated section.
 
