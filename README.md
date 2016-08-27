@@ -14,7 +14,7 @@ Model features:
 UI features:
 - [ ] Support copy/paste.
 - [ ] Maybe support additional keys like delete, tab, shift+enter, etc.
-- [ ] Implement a toolbar.
+- [x] Implement a toolbar.
 - [ ] Implement annotations and styles ! Bold, italics, etc.
 
 ## Terminology
