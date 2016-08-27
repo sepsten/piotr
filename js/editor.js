@@ -20,7 +20,7 @@ Writer.Editor = class Editor {
      *
      * @type {Writer.History}
      */
-    this.history = new Writer.History;
+    this.history = new Writer.History(this);
 
     /**
      * The editor's main or "mother" surface.

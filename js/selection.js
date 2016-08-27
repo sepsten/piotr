@@ -135,7 +135,10 @@ Writer.Selection = class Selection {
        this.previousState.surface !== this.state.surface)
       this.previousState.surface.selection.end();
 
+    // Update the surface-level selection
     this.state.surface.selection.handle(this.docsel);
+    // Bring it to global level by copying it in the global selection state
+    Object.assign(this.state, this.state.surface.selection.state);
 
     // Call subscribers.
     for(var i = 0; i < this.subscribers.length; i++) {
@@ -195,5 +198,25 @@ Writer.Selection = class Selection {
       this.state.surface = this.editor.mother;
     else
       this.state.surface = Writer.surfaceReg.get(asid);
+  }
+
+  /**
+   * Sets the state of selection globally.
+   *
+   * @type {Object} newState - A state of selection
+   */
+  set(newState) {
+    if(newState.caret)
+      newState.surface.selection.set(
+        newState.startNode,
+        newState.startOffset
+      );
+    else
+      newState.surface.selection.set(
+        newState.startNode,
+        newState.startOffset,
+        newState.endNode,
+        newState.endOffset
+      );
   }
 };

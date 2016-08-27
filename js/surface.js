@@ -220,7 +220,13 @@ Writer.Surface = class Surface {
    * @returns {Boolean} True if the transform returned an operation.
    */
   execute(fn, ...args) {
+    // Save the selection before execution
+    var selection = Object.assign({}, this.editor.selection.state);
+
+    // Execute...
     var cmd = fn.apply(this, args);
+    cmd.selection = selection;
+
     if(cmd) {
       this.history.push(cmd); // Save the operation to make it undoable
       this.editor.selection.update(); // Update global selection

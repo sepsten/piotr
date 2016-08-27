@@ -3,9 +3,17 @@
  * Allows to cancel and re-execute commands.
  *
  * @class
+ * @param {Writer.Editor} editor - The parent editor
  */
 Writer.History = class History {
-  constructor() {
+  constructor(editor) {
+    /**
+     * Reference to the parent editor.
+     *
+     * @type {Writer.Editor}
+     */
+    this.editor = editor;
+
     /**
      * The stack of commands. Lower the index, earlier the command.
      *
@@ -35,11 +43,13 @@ Writer.History = class History {
   }
 
   /**
-   * Cancels the last command if possible.
+   * Cancels the last command if possible and restores the previous state of
+   * selection.
    */
   undo() {
     if(this.canUndo()) {
       this.stack[this.cursor].cancel();
+      this.editor.selection.set(this.stack[this.cursor].selection);
       this.cursor--;
     }
   }
