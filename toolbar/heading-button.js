@@ -1,7 +1,7 @@
-var Transforms = require("./../transforms"),
-    TextNode = require("./../nodes/text-node"),
-    ParagraphNode = require("./../nodes/paragraph-node"),
-    HeadingNode = require("./../nodes/heading-node");
+var Transforms = require("./lib/commands/transforms"),
+    TextNode = require("./lib/nodes/text-node"),
+    ParagraphNode = require("./lib/nodes/paragraph-node"),
+    HeadingNode = require("./lib/nodes/heading-node");
 
 class HeadingButton {
   constructor() {
