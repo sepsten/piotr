@@ -34,7 +34,8 @@ class HeadingButton {
       if(self.state === 0)
         return;
 
-      self.surface.execute(HeadingButton.clickHandler, self.state);
+      self.toolbar.editor.execute(HeadingButton.clickHandler,
+        self.surface, self.state);
     });
   }
 

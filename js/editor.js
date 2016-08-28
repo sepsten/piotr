@@ -55,6 +55,39 @@ Writer.Editor = class Editor {
   }
 
   /**
+   * Executes a given transformation function with the surface as context.
+   * The function should return an operation object.
+   * Updates the selection if an operation was executed.
+   *
+   * @param {Function} fn - The function to execute
+   * @param {Writer.Surface} surface - The surface to use as context
+   * @param {*} [...args] - Additionnal arguments to pass to the function
+   * @returns {Boolean} True if the transform returned an operation.
+   */
+  execute(fn, surface, ...args) {
+    // Save the selection before execution
+    var selBefore = this.selection.copyState();
+
+    // Execute...
+    var cmd = fn.apply(surface, args);
+
+    // If the function didn't return any command, abort.
+    if(!cmd)
+      return false;
+
+    this.history.push(cmd); // Save the operation to make it undoable
+
+    // Save selection after execution.
+    this.selection.update(); // Update global selection
+    var selAfter = this.selection.copyState();
+
+    cmd.selBefore = selBefore;
+    cmd.selAfter = selAfter;
+
+    return true;
+  }
+
+  /**
    * Listens to keyboard, paste and input events and defers their handling to
    * the relevant surface.
    *
@@ -92,7 +125,7 @@ Writer.Editor = class Editor {
       if(surface.selection.inSameNode) {
         let node = surface.selection.startNode;
         if(node instanceof Writer.TextNode)
-          surface.execute(function() {return node.modelUpdateFromDOM();});
+          self.execute(function() {return node.modelUpdateFromDOM();}, surface);
         else
           throw new Error("Unhandeld input event on non-text node!");
       } else
