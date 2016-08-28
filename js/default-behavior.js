@@ -23,7 +23,7 @@ Writer.DefaultBehavior = {
     return cmd;
   },
 
-  "Selection+Input": function(e) {
+  "Selection+Keypress": function(e) {
     var cmd = Writer.Transforms.removeRange(this, this.selection.state);
     this.selection.set(this.selection.state.startNode,
       this.selection.startOffset);
