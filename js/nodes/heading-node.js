@@ -26,6 +26,20 @@ Writer.HeadingNode = class HeadingNode extends Writer.TextNode {
   clone() {
     return new Writer.HeadingNode(this.level);
   }
+
+  // From Node
+  toJSON() {
+    var o = super.toJSON();
+    o.level = this.level;
+    return o;
+  }
+
+  // From Node
+  static fromJSON(json) {
+    var h = new HeadingNode(json.level);
+    h.updateState(json.state);
+    return h;
+  }
 };
 
 Writer.HeadingNode.id = "heading";
