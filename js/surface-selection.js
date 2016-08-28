@@ -6,7 +6,7 @@
  * @class
  * @param {Surface} surface - The editing surface
  */
-Writer.SurfaceSelection = class SurfaceSelection {
+class SurfaceSelection {
   constructor(surface) {
     /**
      * True if selection-watching is enabled.
@@ -396,3 +396,5 @@ Writer.SurfaceSelection = class SurfaceSelection {
     this.docsel.addRange(r);
   }
 };
+
+module.exports = SurfaceSelection;

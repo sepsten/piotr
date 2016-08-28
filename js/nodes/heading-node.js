@@ -1,3 +1,6 @@
+var TextNode = require("./text-node"),
+    nodeReg = require("./../node-registry");
+
 /**
  * Wrapper-node for heading tags like `<h1>`, `<h2>`, etc.
  * Does not support mark up yet.
@@ -5,7 +8,7 @@
  * @class
  * @param {Number} level - The header's level, from 1 to 6.
  */
-Writer.HeadingNode = class HeadingNode extends Writer.TextNode {
+class HeadingNode extends TextNode {
   constructor(level) {
     super();
 
@@ -24,7 +27,7 @@ Writer.HeadingNode = class HeadingNode extends Writer.TextNode {
 
   // From TextNode
   clone() {
-    return new Writer.HeadingNode(this.level);
+    return new HeadingNode(this.level);
   }
 
   // From Node
@@ -42,7 +45,9 @@ Writer.HeadingNode = class HeadingNode extends Writer.TextNode {
   }
 };
 
-Writer.HeadingNode.id = "heading";
+HeadingNode.id = "heading";
 
 // Add to registry
-Writer.nodeReg.add(Writer.HeadingNode);
+nodeReg.add(HeadingNode);
+
+module.exports = HeadingNode;

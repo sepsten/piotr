@@ -3,7 +3,7 @@
  *
  * @class
  */
-Writer.NodeRegistry = class NodeRegistry {
+class NodeRegistry {
   constructor() {
     /**
      * Internal map used to store everything.
@@ -47,4 +47,4 @@ Writer.NodeRegistry = class NodeRegistry {
  *
  * @type {Writer.NodeRegistry}
  */
-Writer.nodeReg = new Writer.NodeRegistry;
+module.exports = new NodeRegistry;

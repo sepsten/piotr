@@ -3,7 +3,7 @@
 ## To-do
 
 General:
-- [ ] Use CommonJS idioms to be compatible with Browserify
+- [x] Use CommonJS idioms to be compatible with Browserify
 - [ ] NPM packaging and versioning
 - [ ] Build routines
 - [ ] Tests ???
@@ -11,7 +11,7 @@ General:
 Model features:
 - [x] Implement isolated nodes.
 - [x] A more convenient node registry.
-- [ ] JSON serialization.
+- [x] JSON serialization.
 - [ ] Move all model updates to editor-level instead of surface-level
 - [ ] Clearly separate and/or re-organize event handlers, model transforms and
   base commands.

@@ -73,3 +73,6 @@ class RedoButton {
     this.dom.disabled = !(this.toolbar.editor.history.canRedo());
   }
 }
+
+exports.UndoButton = UndoButton;
+exports.RedoButton = RedoButton;

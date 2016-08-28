@@ -5,7 +5,7 @@
  *
  * @class
  */
-Writer.SurfaceRegistry = class SurfaceRegistry {
+class SurfaceRegistry {
   constructor() {
     /**
      * Internal map used for storage.
@@ -67,4 +67,4 @@ Writer.SurfaceRegistry = class SurfaceRegistry {
  *
  * @type {Writer.SurfaceRegistry}
  */
-Writer.surfaceReg = new Writer.SurfaceRegistry;
+module.exports = new SurfaceRegistry;

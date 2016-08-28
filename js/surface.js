@@ -1,3 +1,7 @@
+var SurfaceSelection = require("./surface-selection"),
+    surfaceReg = require("./surface-registry"),
+    DefaultBehavior = require("./default-behavior");
+
 /**
  * Handles the rendering and editing of a sequence of nodes.
  *
@@ -6,7 +10,7 @@
  * @param {HTMLElement} dom - The DOM node which will contain the editor's
  * editing surface.
  */
-Writer.Surface = class Surface {
+class Surface {
   constructor(nodes) {
     /**
      * ID provided by the surface registry.
@@ -48,7 +52,7 @@ Writer.Surface = class Surface {
      *
      * @type {Writer.SurfaceSelection}
      */
-    this.selection = new Writer.SurfaceSelection(this);
+    this.selection = new SurfaceSelection(this);
 
     /**
      * The array of nodes rendered and updated by the surface.
@@ -62,10 +66,10 @@ Writer.Surface = class Surface {
     /**
      * Behavior for handling of critical inputs.
      */
-    this.behavior = Writer.DefaultBehavior;
+    this.behavior = DefaultBehavior;
 
     // Add the surface to the registry.
-    Writer.surfaceReg.add(this);
+    surfaceReg.add(this);
   }
 
   /**
@@ -77,7 +81,7 @@ Writer.Surface = class Surface {
   setDOMRoot(dom) {
     this.dom = dom;
     // Set the ID as a data attribute
-    this.dom.dataset[Writer.prefix + "SurfaceId"] = this.id;
+    this.dom.dataset["writerSurfaceId"] = this.id;
   }
 
   /**
@@ -262,3 +266,5 @@ Writer.Surface = class Surface {
     }
   }
 };
+
+module.exports = Surface;

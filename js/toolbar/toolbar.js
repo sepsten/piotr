@@ -6,7 +6,7 @@
  * @param {Writer.Editor} editor - The parent editor
  * @param {Element} dom - The toolbar's DOM root
  */
-Writer.Toolbar = class Toolbar {
+class Toolbar {
   constructor(editor, dom) {
     /**
      * Reference to the parent editor.
@@ -56,3 +56,5 @@ Writer.Toolbar = class Toolbar {
     }
   }
 };
+
+module.exports = Toolbar;

@@ -1,3 +1,8 @@
+var Transforms = require("./../transforms"),
+    TextNode = require("./../nodes/text-node"),
+    ParagraphNode = require("./../nodes/paragraph-node"),
+    HeadingNode = require("./../nodes/heading-node");
+
 class HeadingButton {
   constructor() {
     /**
@@ -81,13 +86,13 @@ class HeadingButton {
     var node = surface.selection.startNode;
 
     // If node is not a text node, disable the button
-    if(!(node instanceof Writer.TextNode))
+    if(!(node instanceof TextNode))
       return this.setState(0);
 
     this.surface = surface;
 
     // Set state accordingly
-    if(node instanceof Writer.HeadingNode)
+    if(node instanceof HeadingNode)
       return this.setState(1, node.level);
     else
       return this.setState(2);
@@ -110,16 +115,16 @@ HeadingButton.clickHandler = function(state) {
 
   if(state === 1) {
     if(node.level === 6)
-      newNode = new Writer.ParagraphNode;
+      newNode = new ParagraphNode;
     else
-      newNode = new Writer.HeadingNode(node.level + 1);
+      newNode = new HeadingNode(node.level + 1);
   }
 
   else if(state === 2) {
-    newNode = new Writer.HeadingNode(1);
+    newNode = new HeadingNode(1);
   }
 
-  cmd = Writer.Transforms.changeTextNodeType(
+  cmd = Transforms.changeTextNodeType(
     this,
     node.position,
     newNode
@@ -140,3 +145,5 @@ HeadingButton.STATES = {
   HEADER: 1,
   OTHER: 2
 };
+
+module.exports = HeadingButton;

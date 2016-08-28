@@ -1,3 +1,5 @@
+var nodeReg = require("./node-registry");
+
 /**
  * A document model.
  * It has metadata and can extract meaningful information from the sequence of
@@ -5,7 +7,7 @@
  *
  * @class
  */
-Writer.Document = class Document {
+class Document {
   constructor() {
     /**
      * An array of nodes.
@@ -55,12 +57,14 @@ Writer.Document = class Document {
     if(typeof json.nodes !== "array" && !(json.nodes instanceof Array))
       throw new Error("The `nodes` property must be an array.");
 
-    var doc = new Writer.Document;
+    var doc = new Document;
     for(var i = 0; i < json.nodes.length; i++) {
-      let clazz = Writer.nodeReg.get(json.nodes[i].type);
+      let clazz = nodeReg.get(json.nodes[i].type);
       doc.nodes[i] = clazz.fromJSON(json.nodes[i]);
     }
 
     return doc;
   }
 };
+
+module.exports = Document;

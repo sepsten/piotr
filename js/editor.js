@@ -1,3 +1,8 @@
+var History = require("./history"),
+    Surface = require("./surface"),
+    Selection = require("./selection"),
+    TextNode = require("./nodes/text-node");
+
 /**
  * Sets up an editor with a main surface.
  *
@@ -6,7 +11,7 @@
  * @param {Element} dom - The node that will become the editor's main surface
  * @param {Writer.Document} doc - The document to edit
  */
-Writer.Editor = class Editor {
+class Editor {
   constructor(dom, doc) {
     /**
      * The document that is being edited.
@@ -20,14 +25,14 @@ Writer.Editor = class Editor {
      *
      * @type {Writer.History}
      */
-    this.history = new Writer.History(this);
+    this.history = new History(this);
 
     /**
      * The editor's main or "mother" surface.
      *
      * @type {Writer.Surface}
      */
-    this.mother = new Writer.Surface(doc.nodes);
+    this.mother = new Surface(doc.nodes);
     this.mother.setEditor(this);
     this.mother.setDOMRoot(dom);
     this.mother.attachNodes();
@@ -37,7 +42,7 @@ Writer.Editor = class Editor {
      *
      * @type {Writer.Selection}
      */
-    this.selection = new Writer.Selection(this);
+    this.selection = new Selection(this);
 
     // Listens to DOM events.
     this.bind();
@@ -124,7 +129,7 @@ Writer.Editor = class Editor {
       var surface = self.selection.state.surface;
       if(surface.selection.inSameNode) {
         let node = surface.selection.startNode;
-        if(node instanceof Writer.TextNode)
+        if(node instanceof TextNode)
           self.execute(function() {return node.modelUpdateFromDOM();}, surface);
         else
           throw new Error("Unhandeld input event on non-text node!");
@@ -133,3 +138,5 @@ Writer.Editor = class Editor {
     });
   }
 }
+
+module.exports = Editor;

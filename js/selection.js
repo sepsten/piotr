@@ -1,3 +1,5 @@
+var surfaceReg = require("./surface-registry");
+
 /**
  * Locates the surface that should handle selection. It allows to update the
  * state of selection in the model editor-wise.
@@ -7,7 +9,7 @@
  * @class
  * @param {Writer.Editor} editor - The parent editor
  */
-Writer.Selection = class Selection {
+class Selection {
   constructor(editor) {
     /**
      * The parent editor.
@@ -176,7 +178,7 @@ Writer.Selection = class Selection {
     // surface registry with the `.contains` DOM method going from the lowest
     // in the tree to the highest.
     function findSurfaceID(node) {
-      var paramName = Writer.prefix + "SurfaceId";
+      var paramName = "writerSurfaceId";
       while(node) {
         if(node.dataset && node.dataset[paramName])
           return parseInt(node.dataset[paramName]);
@@ -197,7 +199,7 @@ Writer.Selection = class Selection {
     if(asid !== fsid)
       this.state.surface = this.editor.mother;
     else
-      this.state.surface = Writer.surfaceReg.get(asid);
+      this.state.surface = surfaceReg.get(asid);
   }
 
   /**
@@ -229,3 +231,5 @@ Writer.Selection = class Selection {
       );
   }
 };
+
+module.exports = Selection;

@@ -1,3 +1,8 @@
+var CF = require("./../commands/command-factory"),
+    Transforms = require("./../commands/transforms"),
+    Node = require("./node"),
+    ParagraphNode = require("./paragraph-node");
+
 /**
  * Describes a node with pure textual content.
  * Each sub-class corresponds to a HTML element like `<p>` or `<blockquote>`.
@@ -9,7 +14,7 @@
  *
  * @abstract
  */
-Writer.TextNode = class TextNode extends Writer.Node {
+class TextNode extends Node {
   constructor() {
     super();
 
@@ -24,7 +29,7 @@ Writer.TextNode = class TextNode extends Writer.Node {
       // the node.
       if(this.selection.startOffset !==
          this.selection.startNode.getLength()) {
-        cmd = Writer.Transforms.splitTextNode(
+        cmd = Transforms.splitTextNode(
           this,
           this.selection.state.startNode, // start node id
           this.selection.startOffset
@@ -32,9 +37,9 @@ Writer.TextNode = class TextNode extends Writer.Node {
       }
       // 2. For the last possible offset: we add a new node.
       else {
-        cmd = Writer.CF.insertNode(
+        cmd = CF.insertNode(
           this,
-          new Writer.ParagraphNode,
+          new ParagraphNode,
           this.selection.state.startNode + 1
         );
       }
@@ -57,8 +62,8 @@ Writer.TextNode = class TextNode extends Writer.Node {
               caretPos = previous.getLength();
 
           // If the previous node is a text node, merge the two nodes.
-          if(previous instanceof Writer.TextNode)
-            cmd = Writer.Transforms.mergeTextNodes(this, previous.position);
+          if(previous instanceof TextNode)
+            cmd = Transforms.mergeTextNodes(this, previous.position);
           // Else we do nothing.
 
           // Set selection at the point of merging
@@ -292,7 +297,7 @@ Writer.TextNode = class TextNode extends Writer.Node {
     if(rerender)
       this.surface.selection.save();
 
-    var cmd = Writer.CF.updateNode(this, {text}, rerender)
+    var cmd = CF.updateNode(this, {text}, rerender)
 
     if(rerender)
       this.surface.selection.restore();
@@ -310,5 +315,4 @@ Writer.TextNode = class TextNode extends Writer.Node {
   }
 };
 
-// Inherited from Writer.Node
-Writer.TextNode.id = "text";
+module.exports = TextNode;

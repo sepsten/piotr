@@ -5,7 +5,7 @@
  *
  * @abstract
  */
-Writer.Node = class Node {
+class Node {
   constructor() {
     /**
      * A reference to the surface which is handling this node, or `null` if
@@ -244,7 +244,10 @@ Writer.Node = class Node {
  * This string must be unique: it identifies the class when nodes are
  * serialized.
  *
+ * @abstract
  * @static
  * @type {String}
  */
-Writer.Node.id = "node";
+Node.id = "node";
+
+module.exports = Node;

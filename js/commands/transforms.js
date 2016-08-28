@@ -1,4 +1,11 @@
-Writer.Transforms = {
+var CF = require("./command-factory"),
+    TextNode = require("./../nodes/text-node"),
+    ParagraphNode = require("./../nodes/paragraph-node");
+
+/**
+ * A collection of useful document model transforms.
+ */
+var Transforms = {
   /**
    * Changes the type of a text node.
    *
@@ -9,9 +16,9 @@ Writer.Transforms = {
   changeTextNodeType(surface, pos, newNode) {
     Object.assign(newNode.state, surface.nodes[pos].state);
 
-    return Writer.CF.compose(
-      Writer.CF.removeNode(surface, pos),
-      Writer.CF.insertNode(surface, newNode, pos)
+    return CF.compose(
+      CF.removeNode(surface, pos),
+      CF.insertNode(surface, newNode, pos)
     );
   },
 
@@ -31,9 +38,9 @@ Writer.Transforms = {
 
     newnode.state.text = text2;
 
-    return Writer.CF.compose(
-      Writer.CF.updateNode(node, {text: text1}),
-      Writer.CF.insertNode(surface, newnode, nodeid + 1)
+    return CF.compose(
+      CF.updateNode(node, {text: text1}),
+      CF.insertNode(surface, newnode, nodeid + 1)
     );
   },
 
@@ -50,7 +57,7 @@ Writer.Transforms = {
     var text = node.state.text.substring(0, start) +
                node.state.text.substring(end);
 
-    return Writer.CF.updateNode(node, {text});
+    return CF.updateNode(node, {text});
   },
 
   /**
@@ -64,12 +71,12 @@ Writer.Transforms = {
    * @returns {Writer.Command}
    */
   backspace(surface, pos, start, end) {
-    if(surface.nodes[pos] instanceof Writer.TextNode)
-      return Writer.Transforms.removeTextSlice(surface.nodes[pos], start, end);
+    if(surface.nodes[pos] instanceof TextNode)
+      return Transforms.removeTextSlice(surface.nodes[pos], start, end);
     else // Isolated node
-      return Writer.CF.compose(
-        Writer.CF.removeNode(surface, pos),
-        Writer.CF.insertNode(surface, new Writer.ParagraphNode, pos)
+      return CF.compose(
+        CF.removeNode(surface, pos),
+        CF.insertNode(surface, new ParagraphNode, pos)
       );
   },
 
@@ -83,9 +90,9 @@ Writer.Transforms = {
    */
   mergeTextNodes(surface, pos) {
     var appendState = surface.nodes[pos + 1].state;
-    return Writer.CF.compose(
-      Writer.Transforms.appendText(surface.nodes[pos], appendState),
-      Writer.CF.removeNode(surface, pos + 1)
+    return CF.compose(
+      Transforms.appendText(surface.nodes[pos], appendState),
+      CF.removeNode(surface, pos + 1)
     );
   },
 
@@ -97,7 +104,7 @@ Writer.Transforms = {
    */
   appendText(node, appendState) {
     var text = node.state.text + appendState.text;
-    return Writer.CF.updateNode(node, {text});
+    return CF.updateNode(node, {text});
   },
 
   /**
@@ -120,7 +127,7 @@ Writer.Transforms = {
       // Each time we remove a node, the positions are re-assignated, so we can
       // just delete a certain number of time the node at the same position.
       cmds.push(
-        Writer.CF.removeNode(surface, range.startNode + 1)
+        CF.removeNode(surface, range.startNode + 1)
       );
 
       endNodeID--;
@@ -128,25 +135,27 @@ Writer.Transforms = {
 
     // 2. Partial removal or custom behavior for start and end nodes
     if(endNodeID !== range.startNode) {
-      cmds.push(Writer.Transforms.backspace(
+      cmds.push(Transforms.backspace(
         surface, range.startNode, range.startOffset,
         surface.nodes[range.startNode].getLength()
       ));
 
-      cmds.push(Writer.Transforms.backspace(
+      cmds.push(Transforms.backspace(
         surface, range.startNode + 1, 0, range.endOffset
       ));
 
       // 3. Merge the two resulting text nodes
-      cmds.push(Writer.Transforms.mergeTextNodes(surface, range.startNode));
+      cmds.push(Transforms.mergeTextNodes(surface, range.startNode));
     }
     else {
       // 2bis. If the range is in one node, ...
-      cmds.push(Writer.Transforms.backspace(
+      cmds.push(Transforms.backspace(
         surface, range.startNode, range.startOffset, range.endOffset
       ));
     }
 
-    return Writer.CF.composeArray(cmds);
+    return CF.composeArray(cmds);
   }
 };
+
+module.exports = Transforms;

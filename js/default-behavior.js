@@ -1,3 +1,6 @@
+var Transforms = require("./commands/transforms"),
+    CF = require("./commands/command-factory");
+
 /**
  * Set of handlers for critical inputs.
  * The handlers name can be one of the values of `KeyboardEvent.code` or
@@ -5,11 +8,11 @@
  * the event is fired.
  * They are always called with the `Surface` instance as context.
  */
-Writer.DefaultBehavior = {
+var DefaultBehavior = {
   "Selection+Enter": function(e) {
     e.preventDefault();
-    return Writer.CF.compose(
-      Writer.Transforms.removeRange(this, this.selection.state),
+    return CF.compose(
+      Transforms.removeRange(this, this.selection.state),
       this.selection.startNode.behavior["Enter"].call(this, e)
     );
   },
@@ -17,14 +20,14 @@ Writer.DefaultBehavior = {
   "Selection+Backspace": function(e) {
     e.preventDefault();
     // Remove the selection
-    var cmd = Writer.Transforms.removeRange(this, this.selection.state);
+    var cmd = Transforms.removeRange(this, this.selection.state);
     this.selection.set(this.selection.state.startNode,
       this.selection.startOffset);
     return cmd;
   },
 
   "Selection+Keypress": function(e) {
-    var cmd = Writer.Transforms.removeRange(this, this.selection.state);
+    var cmd = Transforms.removeRange(this, this.selection.state);
     this.selection.set(this.selection.state.startNode,
       this.selection.startOffset);
     return cmd;
@@ -50,3 +53,5 @@ Writer.DefaultBehavior = {
     e.preventDefault();
   }
 };
+
+module.exports = DefaultBehavior;

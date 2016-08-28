@@ -5,7 +5,7 @@
  * @class
  * @param {Writer.Editor} editor - The parent editor
  */
-Writer.History = class History {
+class History {
   constructor(editor) {
     /**
      * Reference to the parent editor.
@@ -85,3 +85,5 @@ Writer.History = class History {
     return this.cursor < (this.stack.length - 1);
   }
 };
+
+module.exports = History;

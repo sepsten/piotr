@@ -12,7 +12,7 @@
  * @property {Object} [selAfter] - State of selection after command execution
  */
 
-var DEBUG = true;
+var DEBUG = false;
 
 /**
  * `UpdateNode`, `InsertNode` and `RemoveNode` are the the only three commands
@@ -22,7 +22,7 @@ var DEBUG = true;
  * about the proper way of retrieving state at the moment of execution in
  * dedicated functions, etc.
  */
-Writer.CommandFactory = Writer.CF = {
+var CF = {
   /**
    * Makes one command out of a number of them.
    *
@@ -55,7 +55,7 @@ Writer.CommandFactory = Writer.CF = {
    * @returns {Writer.Command} A composed command
    */
   composeArray(cmds) {
-    return Writer.CF.compose.apply(null, cmds);
+    return CF.compose.apply(null, cmds);
   },
 
   /**
@@ -150,3 +150,5 @@ Writer.CommandFactory = Writer.CF = {
     return cmd;
   }
 };
+
+module.exports = CF;

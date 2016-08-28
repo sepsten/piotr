@@ -1,3 +1,7 @@
+var CF = require("./../commands/command-factory"),
+    Node = require("./node"),
+    ParagraphNode = require("./paragraph-node");
+
 /**
  * A node that does not represent text and whose behavior is isolated from the
  * global textual behavior.
@@ -5,7 +9,7 @@
  * @class
  * @abstract
  */
-Writer.IsolatedNode = class IsolatedNode extends Writer.Node {
+class IsolatedNode extends Node {
   constructor() {
     super();
 
@@ -14,9 +18,9 @@ Writer.IsolatedNode = class IsolatedNode extends Writer.Node {
 
       // Turn the isolated node into an empty text node.
       var pos = this.selection.state.startNode;
-      var cmd = Writer.CF.compose(
-        Writer.CF.removeNode(this, pos),
-        Writer.CF.insertNode(this, new Writer.ParagraphNode, pos)
+      var cmd = CF.compose(
+        CF.removeNode(this, pos),
+        CF.insertNode(this, new ParagraphNode, pos)
       );
 
       // Place the cursor at the beginning of the new text node
@@ -56,3 +60,5 @@ Writer.IsolatedNode = class IsolatedNode extends Writer.Node {
     return [this.dom, 0];
   }
 };
+
+module.exports = IsolatedNode;
