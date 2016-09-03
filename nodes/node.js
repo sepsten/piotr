@@ -1,7 +1,7 @@
 /**
  * Document node class. Its descendants must also reproduce all of its static
  * members (methods or properties).
- * A node constructor's first argument must always be the parent document.
+ * The node type's ID is always set as a CSS class on the root DOM element.
  *
  * @abstract
  */
@@ -62,6 +62,7 @@ class Node {
   attach(surface) {
     this.surface = surface;
     this.dom = this.createDOMRoot();
+    this.dom.classList.add(this.constructor.id);
     this.render();
   }
 
