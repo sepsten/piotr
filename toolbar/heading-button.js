@@ -16,7 +16,7 @@ class HeadingButton {
     /**
      * Reference to the parent toolbar.
      *
-     * @type {Writer.Toolbar}
+     * @type {Piotr.Toolbar}
      */
     this.toolbar = null;
 
@@ -31,7 +31,7 @@ class HeadingButton {
     /**
      * Reference to the surface in which the current selection sits.
      *
-     * @type {Writer.Surface}
+     * @type {Piotr.Surface}
      */
     this.surface = null;
 

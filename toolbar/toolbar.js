@@ -3,7 +3,7 @@
  * Toolbars are external to the editor.
  *
  * @class
- * @param {Writer.Editor} editor - The parent editor
+ * @param {Piotr.Editor} editor - The parent editor
  * @param {Element} dom - The toolbar's DOM root
  */
 class Toolbar {
@@ -11,7 +11,7 @@ class Toolbar {
     /**
      * Reference to the parent editor.
      *
-     * @type {Writer.Editor}
+     * @type {Piotr.Editor}
      */
     this.editor = editor;
 
@@ -25,7 +25,7 @@ class Toolbar {
     /**
      * The toolbar's component list.
      *
-     * @type {Writer.ToolbarComponent[]}
+     * @type {Piotr.ToolbarComponent[]}
      */
     this.components = [];
 
@@ -39,7 +39,7 @@ class Toolbar {
   /**
    * Adds a component to the toolbar.
    *
-   * @param {Writer.ToolbarComponent} component - The component to add.
+   * @param {Piotr.ToolbarComponent} component - The component to add.
    */
   add(component) {
     component.toolbar = this;

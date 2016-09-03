@@ -17,7 +17,7 @@ class UndoButton {
     /**
      * Reference to the parent toolbar.
      *
-     * @type {Writer.Toolbar}
+     * @type {Piotr.Toolbar}
      */
     this.toolbar = null;
 
@@ -55,7 +55,7 @@ class RedoButton {
     /**
      * Reference to the parent toolbar.
      *
-     * @type {Writer.Toolbar}
+     * @type {Piotr.Toolbar}
      */
     this.toolbar = null;
 

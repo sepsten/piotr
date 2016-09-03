@@ -1,19 +1,19 @@
 {
   "name": "piotr",
   "version": "0.1.0",
-  "description": "A formalist web editor",
+  "description": "A formalist web text editor",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/sepsten/writer.git"
+    "url": "https://github.com/sepsten/piotr.git"
   },
   "author": "sepsten",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/sepsten/writer/issues"
+    "url": "https://github.com/sepsten/piotr/issues"
   },
-  "homepage": "https://github.com/sepsten/writer"
+  "homepage": "https://github.com/sepsten/piotr"
 }
