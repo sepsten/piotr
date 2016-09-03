@@ -78,6 +78,9 @@ class TextNode extends Node {
             // If the previous node is a text node, merge the two nodes.
             if(previous instanceof TextNode)
               cmd = Transforms.mergeTextNodes(r.surface, previous.position);
+            // Else if the node is empty and the previous one is an isolated n.
+            else if(self.getLength() === 0)
+              cmd = CF.removeNode(r.surface, r.startNodeIndex);
             // Else we do nothing.
 
             // Set selection at the point of merging
