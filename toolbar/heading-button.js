@@ -1,7 +1,8 @@
 var Transforms = require("./../lib/commands/transforms"),
     TextNode = require("./../lib/nodes/text-node"),
     ParagraphNode = require("./../lib/nodes/paragraph-node"),
-    HeadingNode = require("./../lib/nodes/heading-node");
+    HeadingNode = require("./../lib/nodes/heading-node"),
+    Range = require("./../lib/range");
 
 class HeadingButton {
   constructor() {
@@ -39,8 +40,7 @@ class HeadingButton {
       if(self.state === 0)
         return;
 
-      self.toolbar.editor.execute(HeadingButton.clickHandler,
-        self.surface, self.state);
+      self.toolbar.editor.execute(HeadingButton.clickHandler, self.state);
     });
   }
 
@@ -71,19 +71,19 @@ class HeadingButton {
    * Updates the button's state.
    */
   update() {
-    var sel = this.toolbar.editor.selection;
+    var sel = this.toolbar.editor.selection.state;
 
     // Disable the button if selection is outside the editor
-    if(!sel.state.inside)
+    if(!sel.inside)
       return this.setState(0);
 
-    var surface = sel.state.surface;
+    var surface = sel.surface;
 
     // Disable the button if the selection is over multiple nodes
-    if(!surface.selection.inSameNode)
+    if(!Range.isInSameNode(sel))
       return this.setState(0);
 
-    var node = surface.selection.startNode;
+    var node = Range.startNode(sel);
 
     // If node is not a text node, disable the button
     if(!(node instanceof TextNode))
@@ -107,10 +107,10 @@ class HeadingButton {
  * @type {Function}
  * @static
  */
-HeadingButton.clickHandler = function(state) {
-  this.selection.save();
+HeadingButton.clickHandler = function(r, state) {
+  r.surface.selection.save();
   var cmd,
-      node = this.selection.startNode,
+      node = Range.startNode(r),
       newNode;
 
   if(state === 1) {
@@ -125,12 +125,12 @@ HeadingButton.clickHandler = function(state) {
   }
 
   cmd = Transforms.changeTextNodeType(
-    this,
+    r.surface,
     node.position,
     newNode
   );
 
-  this.selection.restore();
+  r.surface.selection.restore();
   return cmd;
 };
 
