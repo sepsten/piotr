@@ -36,6 +36,13 @@ class IsolatedNode extends Node {
   }
 
   // From Node
+  attach(surface) {
+    super.attach(surface);
+    this.dom.contentEditable = false;
+    this.dom.classList.add("piotr-isolated-node");
+  }
+
+  // From Node
   selectionStart() {
     this.dom.classList.add("selected");
   }

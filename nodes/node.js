@@ -62,7 +62,8 @@ class Node {
   attach(surface) {
     this.surface = surface;
     this.dom = this.createDOMRoot();
-    this.dom.classList.add(this.constructor.id);
+    this.dom.classList.add("piotr-node");
+    this.dom.classList.add("piotr-" + this.constructor.id);
     this.render();
   }
 

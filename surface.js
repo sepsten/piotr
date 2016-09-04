@@ -83,6 +83,8 @@ class Surface {
     this.dom = dom;
     // Set the ID as a data attribute
     this.dom.dataset["piotrSurfaceId"] = this.id;
+    this.dom.classList.add("piotr-surface");
+    this.dom.contentEditable = true;
   }
 
   /**
