@@ -12,7 +12,7 @@ var SurfaceSelection = require("./surface-selection"),
  * editing surface.
  */
 class Surface {
-  constructor(nodes) {
+  constructor(nodes=[]) {
     /**
      * ID provided by the surface registry.
      *
@@ -201,10 +201,10 @@ class Surface {
 
     // If the selection is restrained to a single node, directly use the node's
     // handler.
-    if(Range.isInSameNode(this.selection.state)) {
-      let node = this.nodes[this.selection.state.startNodeIndex];
-      if(node.behavior.hasOwnProperty(name))
-        this.editor.execute(node.behavior[name], event);
+    if(Range.isInSameNode(this.editor.selection.state) &&
+       Range.startNode(this.editor.selection.state).behavior
+       .hasOwnProperty(name)) {
+      this.editor.execute(node.behavior[name], event);
     }
 
     // Else, use the surface's handler.
