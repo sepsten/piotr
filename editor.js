@@ -74,7 +74,7 @@ class Editor {
     var selBefore = this.selection.copyState();
 
     // Execute...
-    var cmd = fn.call(null, selBefore, ...args);
+    var cmd = fn.call(this, selBefore, ...args);
 
     // If the function didn't return any command, abort.
     if(!cmd)

@@ -1,5 +1,6 @@
 var nodeReg = require("./node-registry"),
-    ParagraphNode = require("./nodes/paragraph-node");
+    ParagraphNode = require("./nodes/paragraph-node"),
+    HeadingNode = require("./nodes/heading-node");
 
 /**
  * A document model.
@@ -18,6 +19,13 @@ class Document {
      */
     this.nodes = [];
 
+    /**
+     * The document's title if there is one.
+     *
+     * @type {String|null}
+     */
+    this.title = null;
+
     if(init)
       this.initEmptyDocument();
   }
@@ -30,26 +38,65 @@ class Document {
   }
 
   /**
+   * Finds the title of the document.
+   */
+  updateTitle() {
+    var t = null;
+    for(var i = 0; i < this.nodes.length; i++) {
+      let node = this.nodes[i];
+
+      if(node instanceof HeadingNode && node.level === 1) {
+        t = node.state.text;
+        break;
+      }
+    }
+
+    this.title = t;
+  }
+
+  /**
    * Makes a JSON object out of the document.
    *
    * @returns {Object}
    */
   toJSON() {
-    return {
-      nodes: this.nodesToJSON()
+    var obj = {
+      nodes: Document.nodesToJSON(this.nodes)
     };
+
+    this.updateTitle();
+    if(this.title !== null)
+      obj.title = this.title;
+
+    return obj;
   }
 
   /**
-   * Creates an array of its nodes JSON representations.
+   * Creates an array of nodes JSON representations.
    *
-   * @private
+   * @param {Node[]}
    * @returns {Object[]}
    */
-  nodesToJSON() {
+  static nodesToJSON(nodes) {
     var a = [];
-    for(var i = 0; i < this.nodes.length; i++) {
-      a.push(this.nodes[i].toJSON());
+    for(var i = 0; i < nodes.length; i++) {
+      a.push(nodes[i].toJSON());
+    }
+
+    return a;
+  }
+
+  /**
+   * Instantiates an arary of nodes from their JSON representation.
+   *
+   * @param {Object[]}
+   * @returns {Node[]}
+   */
+  static nodesFromJSON(json) {
+    var a = [];
+    for(var i = 0; i < json.length; i++) {
+      let clazz = nodeReg.get(json[i].type);
+      a[i] = clazz.fromJSON(json[i]);
     }
 
     return a;
@@ -70,10 +117,9 @@ class Document {
       throw new Error("The `nodes` property must be an array.");
 
     var doc = new Document;
-    for(var i = 0; i < json.nodes.length; i++) {
-      let clazz = nodeReg.get(json.nodes[i].type);
-      doc.nodes[i] = clazz.fromJSON(json.nodes[i]);
-    }
+    doc.nodes = Document.nodesFromJSON(json.nodes);
+    if(json.title)
+      doc.title = json.title;
 
     return doc;
   }

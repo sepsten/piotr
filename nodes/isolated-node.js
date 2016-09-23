@@ -39,6 +39,7 @@ class IsolatedNode extends Node {
   attach(surface) {
     super.attach(surface);
     this.dom.contentEditable = false;
+    this.dom.spellcheck = false;
     this.dom.classList.add("piotr-isolated-node");
   }
 

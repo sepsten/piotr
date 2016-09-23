@@ -85,6 +85,7 @@ class Surface {
     this.dom.dataset["piotrSurfaceId"] = this.id;
     this.dom.classList.add("piotr-surface");
     this.dom.contentEditable = true;
+    this.dom.spellcheck = true;
   }
 
   /**
@@ -204,7 +205,8 @@ class Surface {
     if(Range.isInSameNode(this.editor.selection.state) &&
        Range.startNode(this.editor.selection.state).behavior
        .hasOwnProperty(name)) {
-      this.editor.execute(node.behavior[name], event);
+      this.editor.execute(Range.startNode(this.editor.selection.state)
+        .behavior[name], event);
     }
 
     // Else, use the surface's handler.
