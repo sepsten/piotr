@@ -111,6 +111,7 @@ var Transforms = {
     // 2a. If the start and end nodes are different
     if(endNodeIndex !== r.startNodeIndex) {
       // Remove the start node's end portion
+      // It will always return a command.
       cmds.push(Range.startNode(r).behavior["Backspace"].call(null, {
         surface: r.surface,
         startNodeIndex: r.startNodeIndex,
@@ -120,13 +121,17 @@ var Transforms = {
       }));
 
       // Remove the end node's start portion
-      cmds.push(r.surface.nodes[endNodeIndex].behavior["Backspace"].call(null, {
+      let endNodeCmd = r.surface.nodes[endNodeIndex].behavior["Backspace"]
+      .call(null, {
         surface: r.surface,
         startNodeIndex: endNodeIndex,
         startOffset: 0,
         endNodeIndex: endNodeIndex,
         endOffset: r.endOffset
-      }));
+      });
+
+      // It may not return a command...
+      if(endNodeCmd) cmds.push(endNodeCmd);
 
       // 3. Merge the two resulting text nodes
       cmds.push(Transforms.mergeTextNodes(r.surface, r.startNodeIndex));
