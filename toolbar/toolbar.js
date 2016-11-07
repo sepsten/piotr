@@ -28,12 +28,6 @@ class Toolbar {
      * @type {Piotr.ToolbarComponent[]}
      */
     this.components = [];
-
-    // Subscribe to selection
-    var self = this;
-    this.editor.selection.subscribe(function() {
-      self.update();
-    });
   }
 
   /**
@@ -42,13 +36,13 @@ class Toolbar {
    * @param {Piotr.ToolbarComponent} component - The component to add.
    */
   add(component) {
-    component.toolbar = this;
+    component.setParent(this);
     this.components.push(component);
     this.dom.appendChild(component.dom);
   }
 
   /**
-   * Updates the state of components.
+   * Updates the state of all components.
    */
   update() {
     for(var i = 0; i < this.components.length; i++) {

@@ -2,10 +2,13 @@ var Transforms = require("./../commands/transforms"),
     TextNode = require("./../nodes/text-node"),
     ParagraphNode = require("./../nodes/paragraph-node"),
     HeadingNode = require("./../nodes/heading-node"),
-    Range = require("./../range");
+    Range = require("./../range"),
+    ToolbarComponent = require("./toolbar-component");
 
-class HeadingButton {
+class HeadingButton extends ToolbarComponent {
   constructor() {
+    super();
+
     /**
      * Contains the actual <button> element.
      *
@@ -14,19 +17,12 @@ class HeadingButton {
     this.dom = document.createElement("button");
 
     /**
-     * Reference to the parent toolbar.
-     *
-     * @type {Piotr.Toolbar}
-     */
-    this.toolbar = null;
-
-    /**
      * The current state's ID.
      *
      * @type {Number}
      */
     this.state = 0;
-    this.setState(0)
+    this.setState(0);
 
     /**
      * Reference to the surface in which the current selection sits.
@@ -34,13 +30,25 @@ class HeadingButton {
      * @type {Piotr.Surface}
      */
     this.surface = null;
+  }
+
+  // From ToolbarComponent
+  setParent(toolbar) {
+    super.setParent(toolbar);
 
     var self = this;
+
+    // Subscribe to DOM events
     this.dom.addEventListener("click", function() {
       if(self.state === 0)
         return;
 
-      self.toolbar.editor.execute(HeadingButton.clickHandler, self.state);
+      toolbar.editor.execute(HeadingButton.clickHandler, self.state);
+    });
+
+    // Update on selection events
+    toolbar.editor.selection.on("update", function() {
+      self.update();
     });
   }
 

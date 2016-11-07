@@ -1,10 +1,14 @@
+var ToolbarComponent = require("./toolbar-component");
+
 /**
  * A basic undo button for the toolbar.
  *
  * @class
  */
-class UndoButton {
+class UndoButton extends ToolbarComponent {
   constructor() {
+    super();
+
     /**
      * Contains the actual <button> element.
      *
@@ -13,18 +17,23 @@ class UndoButton {
     this.dom = document.createElement("button");
     this.dom.textContent = "Undo";
     this.dom.disabled = true;
+  }
 
-    /**
-     * Reference to the parent toolbar.
-     *
-     * @type {Piotr.Toolbar}
-     */
-    this.toolbar = null;
+  // From ToolbarComponent
+  setParent(toolbar) {
+    super.setParent(toolbar);
 
     var self = this;
+
+    // Subscribe to DOM events
     this.dom.addEventListener("click", function() {
-      self.toolbar.editor.history.undo();
-      self.toolbar.editor.selection.update();
+      toolbar.editor.history.undo();
+      toolbar.editor.selection.update();
+    });
+
+    // Update on history events
+    toolbar.editor.history.on("update", function() {
+      self.update();
     });
   }
 
@@ -41,8 +50,10 @@ class UndoButton {
  *
  * @class
  */
-class RedoButton {
+class RedoButton extends ToolbarComponent {
   constructor() {
+    super();
+
     /**
      * Contains the actual <button> element.
      *
@@ -50,19 +61,16 @@ class RedoButton {
      */
     this.dom = document.createElement("button");
     this.dom.textContent = "Redo";
-    this.dom.disabled = true;
+    this.dom.disabled = true
+  }
 
-    /**
-     * Reference to the parent toolbar.
-     *
-     * @type {Piotr.Toolbar}
-     */
-    this.toolbar = null;
+  // From ToolbarComponent
+  setParent(toolbar) {
+    super.setParent(toolbar);
 
-    var self = this;
     this.dom.addEventListener("click", function() {
-      self.toolbar.editor.history.redo();
-      self.toolbar.editor.selection.update();
+      toolbar.editor.history.redo();
+      toolbar.editor.selection.update();
     });
   }
 
