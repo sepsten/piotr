@@ -1,4 +1,5 @@
-var surfaceReg = require("./surface-registry");
+var surfaceReg = require("./surface-registry"),
+    EventEmitter = require("events").EventEmitter;
 
 /**
  * Locates the surface that should handle selection. It allows to update the
@@ -9,8 +10,10 @@ var surfaceReg = require("./surface-registry");
  * @class
  * @param {Piotr.Editor} editor - The parent editor
  */
-class Selection {
+class Selection extends EventEmitter {
   constructor(editor) {
+    super();
+
     /**
      * The parent editor.
      *
@@ -146,6 +149,9 @@ class Selection {
     for(var i = 0; i < this.subscribers.length; i++) {
       this.subscribers[i](this);
     }
+
+    // New event system
+    this.emit("update");
   }
 
   /**

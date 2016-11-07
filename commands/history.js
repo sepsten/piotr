@@ -1,3 +1,5 @@
+var EventEmitter = require("events").EventEmitter;
+
 /**
  * Executes and stores all the commands that modify the editor's model.
  * Allows to cancel and re-execute commands.
@@ -5,8 +7,10 @@
  * @class
  * @param {Piotr.Editor} editor - The parent editor
  */
-class History {
+class History extends EventEmitter {
   constructor(editor) {
+    super();
+
     /**
      * Reference to the parent editor.
      *
@@ -42,6 +46,7 @@ class History {
     this.cursor++;                      // Move to the next index
     this.stack[this.cursor] = cmd;      // Add the new command
     this.stack.splice(this.cursor + 1); // Erase all subsequent commands
+    this.emit("update");
   }
 
   /**
@@ -53,6 +58,7 @@ class History {
       this.stack[this.cursor].cancel();
       this.editor.selection.set(this.stack[this.cursor].selBefore);
       this.cursor--;
+      this.emit("update");
     }
   }
 
@@ -64,6 +70,7 @@ class History {
       this.cursor++;
       this.stack[this.cursor].execute();
       this.editor.selection.set(this.stack[this.cursor].selAfter);
+      this.emit("update");
     }
   }
 
