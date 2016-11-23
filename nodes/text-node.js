@@ -126,6 +126,7 @@ class TextNode extends Node {
   createDOMRoot() {
     // Returns a new instance of the DOM element set in `TextNode#tagName`.
     var dom = document.createElement(this.getTagName());
+    dom.id = this.id;
     // This prevents Firefox from messing with our white-spaces.
     // Plus it is recommended by the W3C (but we apply it onto each individual
     // text node rather than the whole editing host).

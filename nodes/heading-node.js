@@ -1,6 +1,7 @@
 var TextNode = require("./text-node"),
     ParagraphNode = require("./paragraph-node"),
-    nodeReg = require("./../node-registry");
+    nodeReg = require("./../node-registry"),
+    shortid = require("shortid");
 
 /**
  * Wrapper-node for heading tags like `<h1>`, `<h2>`, etc.
@@ -14,7 +15,7 @@ class HeadingNode extends TextNode {
     super();
 
     /**
-     * The header's level.
+     * The header's level. From 1 to 6.
      *
      * @type {Number}
      */
@@ -43,8 +44,8 @@ class HeadingNode extends TextNode {
 
   // From Node
   static fromJSON(json) {
-    var h = new HeadingNode(json.level);
-    h.updateState(json.state);
+    var h = super.fromJSON(json);
+    h.level = json.level;
     return h;
   }
 };

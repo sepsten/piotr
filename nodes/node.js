@@ -1,3 +1,5 @@
+var shortid = require("shortid");
+
 /**
  * Document node class. Its descendants must also reproduce all of its static
  * members (methods or properties).
@@ -7,6 +9,13 @@
  */
 class Node {
   constructor() {
+    /**
+     * A unique ID identifying the node in the document.
+     *
+     * @type {String}
+     */
+    this.id = shortid.generate();
+
     /**
      * A reference to the surface which is handling this node, or `null` if
      * the node isn't displayed anywhere (but kept in the history for example).
@@ -224,6 +233,7 @@ class Node {
    */
   toJSON() {
     return {
+      id: this.id,
       type: this.constructor.id,
       state: this.copyState()
     };
@@ -237,6 +247,7 @@ class Node {
    */
   static fromJSON(json) {
     var newNode = new this;
+    newNode.id = json.id || shortid.generate();
     newNode.updateState(json.state);
     return newNode;
   }

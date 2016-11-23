@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/sepsten/piotr/issues"
   },
-  "homepage": "https://github.com/sepsten/piotr"
+  "homepage": "https://github.com/sepsten/piotr",
+  "dependencies": {
+    "shortid": "^2.2.6"
+  }
 }
