@@ -98,6 +98,46 @@ class TextNode extends Node {
           r.endOffset);
       }
     };
+
+    this.behavior["Paste"] = function(r, e) {
+      var ParagraphNode = require("./paragraph-node");
+
+      // Preliminary plain-text-only implementation
+      if(e) e.preventDefault();
+
+      // Text transformation
+      var text = e.clipboardData.getData("text/plain");
+      text = text.replace(/\r/g, "\n"); // Replace carriage returns by new lines
+
+      // Split into paragraphs
+      var paragraphs = text.split("\n");
+
+      if(paragraphs.length === 0) return;
+
+      var cmds = [];
+
+      // For the last paragraph, just insert it into the current node
+      cmds.push(Transforms.insertText(
+        self,
+        paragraphs[paragraphs.length - 1],
+        r.startOffset
+      ));
+
+      // For the rest, insert new paragraphs
+      for(var i = 0; i < paragraphs.length - 1; i++) {
+        let node = new ParagraphNode;
+        node.state.text = paragraphs[i];
+        cmds.push(CF.insertNode(r.surface, node, r.startNodeIndex+i));
+      }
+
+      if(e) {
+          // i is now the index of the last paragraph in the array.
+          r.surface.selection.set(r.startNodeIndex + i,
+            paragraphs[i].length);
+      }
+
+      return CF.composeArray(cmds);
+    };
   }
 
   // From Node

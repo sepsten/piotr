@@ -52,6 +52,24 @@ var DefaultBehavior = {
   // Special
   "Paste": function(r, e) {
     e.preventDefault();
+   },
+
+  "Selection+Paste": function(r, e) {
+    e.preventDefault();
+
+    if(Range.startNode(r).behavior.hasOwnProperty("Paste"))
+      return CF.compose(
+        Transforms.removeRange(r),
+        Range.startNode(r).behavior["Paste"].call(null, r, e)
+      );
+  },
+
+  "Cut": function(r, e) {
+    e.preventDefault();
+  },
+
+  "Selection+Cut": function(r, e) {
+    e.preventDefault();
   }
 
 };

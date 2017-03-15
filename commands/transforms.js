@@ -87,6 +87,19 @@ var Transforms = {
   },
 
   /**
+   * Inserts text in a text node.
+   *
+   * @param {Piotr.TextNode} node - The node to in which text will be inserted
+   * @param {String} text - The text to insert
+   * @param {Number} offset - The position at which the text will be inserted
+   */
+  insertText(node, text, offset) {
+    var text = node.state.text.slice(0, offset) + text
+      + node.state.text.slice(offset);
+    return CF.updateNode(node, {text});
+  },
+
+  /**
    * Removes a model range of nodes.
    *
    * @param {Piotr.Range} r - The Range object

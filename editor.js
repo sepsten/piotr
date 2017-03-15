@@ -115,6 +115,10 @@ class Editor {
       self.handle("Paste", e);
     });
 
+    dom.addEventListener("cut", function(e) {
+      self.handle("Cut", e);
+    });
+
     dom.addEventListener("input", function(e) {
       // Only single-node changes on text nodes should end up here.
       // Indeed, "input" events are non-cancellable and not very explicit as to
