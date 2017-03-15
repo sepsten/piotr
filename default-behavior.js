@@ -13,10 +13,12 @@ var DefaultBehavior = {
 
   "Selection+Enter": function(r, e) {
     e.preventDefault();
-    return CF.compose(
-      Transforms.removeRange(r),
-      Range.startNode(r).behavior["Enter"].call(null, r, e)
-    );
+
+    if(Range.startNode(r).behavior.hasOwnProperty("Enter"))
+      return CF.compose(
+        Transforms.removeRange(r),
+        Range.startNode(r).behavior["Enter"].call(null, r, e)
+      );
   },
 
   "Selection+Backspace": function(r, e) {
